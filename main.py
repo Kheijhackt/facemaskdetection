@@ -2,7 +2,7 @@ import streamlit as st
 import tensorflow as tf
 import os
 
-@st.cache(allow_output_mutation=True)
+@st.cache_resource()
 def load_model():
   model=tf.keras.models.load_model('model_custom.h5')
   return model
@@ -17,14 +17,14 @@ import numpy as np
 def import_and_predict(image_path,model):
     size=(35,35)
     image = Image.open(image_path)
-    image=ImageOps.fit(image,size,Image.ANTIALIAS)
+    image = ImageOps.fit(image, size, Image.Resampling.LANCZOS)
     image_rgb = image.convert("RGB")
     img = np.asarray(image_rgb)
     img_reshape=img[np.newaxis,...]
     prediction = model.predict(img_reshape)
     return prediction
   
-image_dir = "./test_face/"
+image_dir = "./PICS/"
 image_files = os.listdir(image_dir)  
   
 selected_image = st.selectbox("Select an image", image_files)
